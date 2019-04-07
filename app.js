@@ -7,8 +7,11 @@ var bodyParser = require('body-parser');
 const router = express.Router();
 const cheerio = require('cheerio');
 const fs = require('fs');
+const http = require('http')
 
-// const http = require('http')
+/*******************************/
+/************* STUFF ***********/
+/*******************************/
 
 // app.use(bodyParser.json())
 // app.use(bodyParser.urlencoded({ extended: true }))
@@ -19,154 +22,56 @@ const fs = require('fs');
 //   next()
 // })
 
-
-// app.get('/', function(req,res) {
-//     /* delivers google.com */
-//     //   var newurl = 'http://google.com/';
-// 	//   request(newurl).pipe(res);
-	
-// 	/* goes to index.html */
-// 	res.sendFile(path.join(__dirname + '/index.html'));
-// });
-
-// app.get('/get-proxy', function(req,res) {
-//     /* delivers google.com */
-//       var newurl = 'http://google.com/';
-// 	   request(newurl).pipe(res);
-// 	// response.send(request.body);
-// });
-
-
-
-
-
-// // app.use(express.static('build'))
-// // app.get('/', (req, res) => res.send('Hello World!'))
-// // app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+// app.use(express.static('build'))
 
 // app.use("/", express.static(__dirname + "/"));
-// app.use(express.static(__dirname + '/View'));
-// //Store all HTML files in view folder.
-// app.use(express.static(__dirname + '/Script'));
-// //Store all JS and CSS in Scripts folder.
+
+// app.use(express.static(__dirname + '/View')); //Store all HTML files in view folder.
+// app.use(express.static(__dirname + '/Script')); //Store all JS and CSS in Scripts folder.
 
 // app.use('/', router);
-// app.set('port', process.env.PORT || 3002)
-
-// app.listen(app.get('port'), () => {
-// 	console.log('Server started at port: ', app.get('port'))
-// })
 
 
-/*****************************/
-/******** ANOTHER TRY ********/
-/*****************************/
-
-
-// app.get('/www.google.com', function (req, res, next) {
-//     http.get({
-//         // host: request.params.host,
-// 		// path: path,
-// 		host: 'http://www.google.com',
-// 		// path: 'http://www.google.com',
-//         headers: {}
-//     }, function(res) {
-//         var body = '';
-
-//         res.on('data', function(chunk) {
-//             body += chunk;
-//         });
-
-//         res.on('end', function() {
-// 			response.end(body);
-//         });
-//     }).on('error', function(e) {
-//         console.log("Got error: ", e);
-//     });
-// });
-
-
-
-
-
-
-
-/*****************************/
-/******* SCRAPING TEST *******/
-/*****************************/
-
-// Scraping IMDB test, creates a json file but values are empty...
-
-/*
-var express = require('express');
-var fs = require('fs');
-var request = require('request');
-var cheerio = require('cheerio');
-var app     = express();
-
-
-app.get('/scrape', function(req, res){
-url = 'http://www.imdb.com/title/tt1229340/';
-request(url, function(error, response, html){
-    if(!error){
-        var $ = cheerio.load(html);
-
-    var title, release, rating;
-    var json = { title : "", release : "", rating : ""};
-
-    $('.header').filter(function(){
-        var data = $(this);
-        title = data.children().first().text();            
-        release = data.children().last().children().text();
-
-        json.title = title;
-        json.release = release;
-    })
-
-    $('.star-box-giga-star').filter(function(){
-        var data = $(this);
-        rating = data.text();
-
-        json.rating = rating;
-    })
-}
-
-// To write to the system we will use the built in 'fs' library.
-// In this example we will pass 3 parameters to the writeFile function
-// Parameter 1 :  output.json - this is what the created filename will be called
-// Parameter 2 :  JSON.stringify(json, null, 4) - the data to write, here we do an extra step by calling JSON.stringify to make our JSON easier to read
-// Parameter 3 :  callback function - a callback function to let us know the status of our function
-
-fs.writeFile('output.json', JSON.stringify(json, null, 4), function(err){
-
-    console.log('File successfully written! - Check your project directory for the output.json file');
-
-})
-
-// Finally, we'll just send out a message to the browser reminding you that this app does not have a UI.
-res.send('Check your console!')
-
-    }) ;
-})
-
-app.listen('3002')
-console.log('Magic happens on port 3002');
-exports = module.exports = app;
- */
 
 
 /*******************************/
-/******* SCRAPING TEST 2 *******/
+/********* INDEX ROUTE *********/
+/*******************************/
+
+/* index.html */
+app.get('/', function(req,res) {
+	// res.send('Hello World!'))
+	res.sendFile(path.join(__dirname + '/index.html'));
+});
+
+
+/*******************************/
+/********** PROXY TEST *********/
+/*******************************/
+
+/* proxy */
+app.get('/get-proxy', function(req,res) {
+    /* delivers google.com */
+    var newurl = 'http://google.com/';
+	request(newurl).pipe(res);
+	// response.send(request.body);
+});
+
+
+/*******************************/
+/********* SCRAPING TEST *******/
 /*******************************/
 
 const JSON = require('circular-json');
 
-app.get('/scrape-2', function(req, res){
+app.get('/scrape', function(req, res){
 
 	// const URL = "https://www.flipkart.com/search?q=mobiles";
 	const URL = "http://www.wikipedia.org";
 
 	request(URL, function (err, res, body) {
+		res.charset = null; 
+		
 		if(err)
 		{
 			console.log(err, "error occured while hitting URL");
@@ -222,8 +127,14 @@ app.get('/scrape-2', function(req, res){
 })
 
 
+/*******************************/
+/************* PORT ************/
+/*******************************/
 
-
+// app.set('port', process.env.PORT || 3002)
+// app.listen(app.get('port'), () => {
+// 	console.log('Server started at port: ', app.get('port'))
+// })
 app.listen('3002')
 console.log('Magic happens on port 3002');
 exports = module.exports = app;

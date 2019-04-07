@@ -4,34 +4,14 @@ function Main() {
 
     function init() {
 		_proxyContainer = document.querySelector('.js-proxy');
-		// getProxy();
-		// getGoogle();
+		getPage();
     }
-
-    // function getProxy() {
-
-	// 	console.log("hej från getProxy!")
-	// 	fetch('/get-proxy')
-	// 	.then((response) => response.json())
-	// 	.then((data) => { 
-		
-	// 		console.log(data);
-
-	// 	})
-	// 	.catch(error => {
-	// 		console.log(error);
-	// 	});
-	// }
 	
-    function getGoogle() {
-
-		console.log("hej från getGoogle!")
-		fetch('/get-google')
+    function getPage() {
+		fetch('/get-page')
 		.then((response) => response.json())
 		.then((data) => { 
-		
 			console.log(data);
-
 		})
 		.catch(error => {
 			console.log(error);
@@ -41,5 +21,5 @@ function Main() {
     init();
 }
 
-window.onload = Main();
+// window.onload = Main();
 

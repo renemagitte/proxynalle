@@ -8,7 +8,7 @@ function Main() {
     }
 	
     function getPage() {
-		fetch('/get-page')
+		fetch('/get-proxy')
 		.then((response) => response.json())
 		.then((data) => { 
 			console.log(data);
@@ -21,5 +21,5 @@ function Main() {
     init();
 }
 
-// window.onload = Main();
+window.onload = Main();
 

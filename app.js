@@ -7,7 +7,8 @@ var bodyParser = require('body-parser');
 const router = express.Router();
 const cheerio = require('cheerio');
 const fs = require('fs');
-const http = require('http')
+const http = require('http');
+const JSON = require('circular-json');
 
 /*******************************/
 /************* STUFF ***********/
@@ -24,7 +25,8 @@ const http = require('http')
 
 // app.use(express.static('build'))
 
-// app.use("/", express.static(__dirname + "/"));
+// define static resource server from local directory public (for any request not otherwise handled)
+app.use("/", express.static(__dirname + "/"));
 
 // app.use(express.static(__dirname + '/View')); //Store all HTML files in view folder.
 // app.use(express.static(__dirname + '/Script')); //Store all JS and CSS in Scripts folder.
@@ -51,10 +53,24 @@ app.get('/', function(req,res) {
 
 /* proxy */
 app.get('/get-proxy', function(req,res) {
-    /* delivers google.com */
-    var newurl = 'http://google.com/';
-	request(newurl).pipe(res);
+    var newurl = 'http://www.wikipedia.org';
+	// request(newurl).pipe(res);
 	// response.send(request.body);
+
+
+	request(newurl, function (err, res, body) {
+
+		if(err)
+		{
+			console.log(err, "error occured while hitting URL");
+		}
+		else
+		{
+			
+			console.log(body); // succsessfully logging out html
+			// res.send(res.body);
+		}
+	})
 });
 
 
@@ -62,26 +78,18 @@ app.get('/get-proxy', function(req,res) {
 /********* SCRAPING TEST *******/
 /*******************************/
 
-const JSON = require('circular-json');
-
 app.get('/scrape', function(req, res){
 
-	// const URL = "https://www.flipkart.com/search?q=mobiles";
 	const URL = "http://www.wikipedia.org";
 
 	request(URL, function (err, res, body) {
 		res.charset = null; 
 		
-		if(err)
-		{
-			console.log(err, "error occured while hitting URL");
-		}
-		else
-		{
+			/* Crawl logo and slogan text only */
+
 			// const arr = []; 
 			// let $ = cheerio.load(body); 
-			// $('h1.central-textlogo > div.central-textlogo-wrapper').each(function(index){ 
-				  
+			// $('h1.central-textlogo > div.central-textlogo-wrapper').each(function(index){ 	  
 			// 	const data = $(this).find('div.central-textlogo__image').text();
 			// 	const name = $(this).find('strong.localized-slogan').text();
 			// 	const obj = { 
@@ -100,8 +108,17 @@ app.get('/scrape', function(req, res){
 			// 		console.log("success"); 
 			// 	} 
 			// }); 
- 
+
+			/* Crawl enitire body */
+
 			let $ = cheerio.load(body); 
+
+			if(err)
+			{
+				console.log(err, "error occured while hitting URL");
+			}
+			else
+			{
 				  
 			const data = $(this);
 			const obj = { 
@@ -111,6 +128,8 @@ app.get('/scrape', function(req, res){
 
 			const myJson = JSON.stringify(obj);
 
+			
+
 			fs.writeFile('data.txt', myJson, function (err) { 
 				if(err) { 
 					console.log(err); 
@@ -119,12 +138,12 @@ app.get('/scrape', function(req, res){
 					console.log("success"); 
 				} 
 			}); 
+		}
 
 
 			
-		}
-	});
-})
+	})
+});
 
 
 /*******************************/

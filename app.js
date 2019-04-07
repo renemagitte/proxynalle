@@ -57,20 +57,27 @@ app.get('/get-proxy', function(req,res) {
 	// request(newurl).pipe(res);
 	// response.send(request.body);
 
-
 	request(newurl, function (err, res, body) {
-
-		if(err)
-		{
+		if(err){
 			console.log(err, "error occured while hitting URL");
-		}
-		else
-		{
-			
+		}else{
 			console.log(body); // succsessfully logging out html
 			// res.send(res.body);
+
+			// Save url source code in new text file:
+			fs.writeFile('wiki.txt', body, function (err) { 
+				if(err) { 
+					console.log(err); 
+				} 
+				else{ 
+					console.log("success"); 
+				} 
+			}); 
+
+
 		}
-	})
+	});
+
 });
 
 

@@ -7,10 +7,9 @@ function Main() {
     function init() {
 		_proxyContainer = document.querySelector('.js-proxy');
 		_body = document.querySelector('body');
-		// getPage();
 
 		createTeddy();
-
+		// getPage();
 		
 	}
 
